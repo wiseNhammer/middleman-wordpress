@@ -37,17 +37,19 @@ module Middleman
         # Remove all WordPress files
         FileUtils.rm_rf(Dir.glob('data/wordpress_*'))
 
-        # Grab all the posts
-        api   = WP::API[MiddlemanWordPress.options.uri]
+        # Instantiate the client
+        @api = WP::API[MiddlemanWordPress.options.uri]
 
-        # Grab all the pages
-        posts = api.posts.concat api.pages
+        # Build-up posts
+        posts = []
+        posts.concat fetch_pages_collection
+        posts.concat fetch_posts_collection(:posts)
 
-        # Grab posts of custom types
         MiddlemanWordPress.options.custom_post_types.each do |post_type|
-          posts.concat api.posts(type: post_type.to_s.singularize)
+          posts.concat fetch_posts_collection(post_type)
         end
 
+        # Strip out headers; keep attributes
         posts.map!{|post| post.attributes}
 
         # Derive all the post types
@@ -66,6 +68,61 @@ module Middleman
           end
         end
       end
+
+      protected
+
+        def fetch_pages_collection
+          pages = []
+          page  = 1
+          limit = 10
+
+          tmp_pages = fetch_pages(page, limit)
+          while !tmp_pages.empty?
+            pages.concat tmp_pages
+            page = page + 1
+            tmp_pages = fetch_pages(page, limit)
+          end
+
+          pages
+        end
+
+        def fetch_posts_collection(type)
+          type  = type.to_s.singularize
+          posts = []
+          page  = 1
+          limit = 10
+
+          tmp_posts = fetch_posts(type, page, limit)
+          while !tmp_posts.empty?
+            posts.concat tmp_posts
+            page = page + 1
+            tmp_posts = fetch_posts(type, page, limit)
+          end
+
+          posts
+        end
+
+        def fetch_pages(page, limit)
+          begin
+            pages = @api.pages(page: page, posts_per_page: limit)
+          rescue WP::API::ResourceNotFoundError => e
+            # Who cares? We've reached the end of the list
+            pages = []
+          end
+
+          pages
+        end
+
+        def fetch_posts(type, page, limit)
+          begin
+            posts = @api.posts(type: type, page: page, posts_per_page: limit)
+          rescue WP::API::ResourceNotFoundError => e
+            # Who cares? We've reached the end of the list
+            posts = []
+          end
+
+          posts
+        end
     end
   end
 end
