@@ -48,19 +48,21 @@ module Middleman
           posts.concat api.posts(type: post_type.to_s.singularize)
         end
 
+        posts.map!{|post| post.attributes}
+
         # Derive all the post types
         post_types = []
-        posts.each{|post| post_types << post.type}
+        posts.each{|post| post_types << post['type']}
         post_types.uniq!
 
         # Save the posts out to disc in collections by post type
         post_types.each do |post_type|
           collection_name = post_type.pluralize
-          collection      = posts.select{|post| post.type == post_type}
-          extension       = ".json"
+          collection      = posts.select{|post| post['type'] == post_type}
+          extension       = "json"
 
           File.open("data/wordpress_#{collection_name}.#{extension}", "w") do |f|
-            f.write({"#{collection_name}" => collection}.to_json)
+            f.write(collection.to_json)
           end
         end
       end
