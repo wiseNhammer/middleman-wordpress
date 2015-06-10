@@ -22,3 +22,11 @@ activate :wordpress do |wp|
   wp.custom_post_types = [:events, :resources, :other_things]
 end
 ```
+
+## Import Data
+
+To import data, run:
+
+```
+middleman wordpress
+```
