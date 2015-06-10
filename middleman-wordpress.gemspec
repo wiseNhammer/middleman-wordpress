@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Nickolas Kenyeres"]
   s.email       = ["nkenyeres@gmail.com"]
-  s.homepage    = "https://github.com/knicklabs"
+  s.homepage    = "https://github.com/knicklabs/middleman-wordpress"
   s.summary     = %q{An extension for Middleman that pulls content from WordPress via WP REST API}
   s.description = %q{An extension for Middleman that enables the building of static websites using WordPress-managed content. This extension pulls content from WordPress via the WP REST API plugin for WordPress.}
 
