@@ -6,6 +6,7 @@ require 'middleman-wordpress/version'
 Gem::Specification.new do |s|
   s.name        = "middleman-wordpress"
   s.version     = MiddlemanWordPress::VERSION
+  s.license     = 'MIT'
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Nickolas Kenyeres"]
   s.email       = ["nkenyeres@gmail.com"]
