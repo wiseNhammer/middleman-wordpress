@@ -30,3 +30,8 @@ To import data, run:
 ```
 middleman wordpress
 ```
+
+## License
+
+Copyright (c) 2015 Nickolas Kenyeres. Middleman-WordPress is free software and
+may be redistributed under the terms specified in the [license](LICENSE.md).
